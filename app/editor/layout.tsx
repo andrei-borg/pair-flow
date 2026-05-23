@@ -21,7 +21,7 @@ export default function EditorLayout({
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
-      <main className="pt-12 h-full">{children}</main>
+      <main className="pt-12">{children}</main>
     </div>
   );
 }

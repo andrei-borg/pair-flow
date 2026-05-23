@@ -8,6 +8,15 @@ interface EditorNavbarProps {
   onToggleSidebar: () => void;
 }
 
+/**
+ * Top fixed editor navigation bar with a left-side toggle control.
+ *
+ * Renders a header fixed to the top of the viewport that displays a button which toggles the sidebar icon based on `sidebarOpen`.
+ *
+ * @param sidebarOpen - When `true`, shows the closed-panel icon; when `false`, shows the open-panel icon.
+ * @param onToggleSidebar - Callback invoked when the toggle button is clicked.
+ * @returns The header element for the editor navbar
+ */
 export function EditorNavbar({ sidebarOpen, onToggleSidebar }: EditorNavbarProps) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-12 flex items-center bg-background border-b border-border">

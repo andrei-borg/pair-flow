@@ -9,6 +9,13 @@ interface ProjectSidebarProps {
   onClose: () => void;
 }
 
+/**
+ * Renders a slide-in left sidebar for project navigation with "My Projects" and "Shared" tabs.
+ *
+ * @param isOpen - Controls visibility; when true the sidebar is translated into view
+ * @param onClose - Handler invoked when the close (X) button is clicked
+ * @returns The sidebar React element
+ */
 export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
   return (
     <aside

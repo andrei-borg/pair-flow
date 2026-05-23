@@ -5,13 +5,19 @@ change.
 
 ## Current Phase
 
-- Feature 01 complete
+- Feature 02 complete
 
 ## Current Goal
 
 - Pick up the next feature spec from `context/feature-specs/`.
 
 ## Completed
+
+- Feature 02 — Editor chrome:
+  - `components/editor/editor-navbar.tsx` — fixed-height top navbar (h-12, z-50), left sidebar toggle with `PanelLeftOpen`/`PanelLeftClose` icons, right section empty placeholder.
+  - `components/editor/project-sidebar.tsx` — fixed overlay sidebar (z-40, w-72), slides in/out via `translate-x` transition, `isOpen`/`onClose` props, "Projects" header with close button, shadcn `Tabs` (My Projects / Shared) with empty placeholder states, full-width "New Project" button with `Plus` icon.
+  - Dialog pattern: the existing `components/ui/dialog.tsx` (shadcn) is ready for future use — it already supports title/description/footer actions via the dark-theme tokens in `globals.css`. No additional dialogs built.
+  - `tsc --noEmit` passes. No lint errors.
 
 - Feature 01 — Design system:
   - `shadcn/ui` initialized (`components.json`, base-nova preset, `baseColor: neutral`, CSS variables).
@@ -28,7 +34,7 @@ change.
 
 ## Next Up
 
-- Awaiting the next feature spec.
+- Awaiting the next feature spec from `context/feature-specs/`.
 
 ## Open Questions
 

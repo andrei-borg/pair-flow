@@ -13,21 +13,19 @@ import {
 } from "@/components/ui/dialog";
 import { useProjectDialogsContext } from "@/components/editor/project-dialogs-context";
 
-function toSlug(name: string): string {
-  const slug = name
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .replace(/^-+|-+$/g, "");
-  return slug || "untitled";
-}
-
 export function ProjectDialogs() {
-  const { dialog, selectedProject, nameInput, setNameInput, loading, close } =
-    useProjectDialogsContext();
+  const {
+    dialog,
+    selectedProject,
+    nameInput,
+    roomIdPreview,
+    setNameInput,
+    loading,
+    close,
+    confirmCreate,
+    confirmRename,
+    confirmDelete,
+  } = useProjectDialogsContext();
   const renameInputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -51,18 +49,24 @@ export function ProjectDialogs() {
               placeholder="Project name"
               value={nameInput}
               onChange={(e) => setNameInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && nameInput.trim()) void confirmCreate();
+              }}
               autoFocus
             />
-            {nameInput && (
+            {roomIdPreview && (
               <p className="text-xs text-muted-foreground">
-                Slug:{" "}
-                <span className="font-mono">{toSlug(nameInput)}</span>
+                Room ID:{" "}
+                <span className="font-mono">{roomIdPreview}</span>
               </p>
             )}
           </div>
           <DialogFooter showCloseButton>
-            <Button disabled={!nameInput.trim() || loading} onClick={close}>
-              Create
+            <Button
+              disabled={!nameInput.trim() || loading}
+              onClick={() => void confirmCreate()}
+            >
+              {loading ? "Creating…" : "Create"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -88,13 +92,16 @@ export function ProjectDialogs() {
             value={nameInput}
             onChange={(e) => setNameInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && nameInput.trim()) close();
+              if (e.key === "Enter" && nameInput.trim()) void confirmRename();
             }}
             autoFocus
           />
           <DialogFooter showCloseButton>
-            <Button disabled={!nameInput.trim() || loading} onClick={close}>
-              Rename
+            <Button
+              disabled={!nameInput.trim() || loading}
+              onClick={() => void confirmRename()}
+            >
+              {loading ? "Renaming…" : "Rename"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -116,8 +123,12 @@ export function ProjectDialogs() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter showCloseButton>
-            <Button variant="destructive" disabled={loading} onClick={close}>
-              Delete
+            <Button
+              variant="destructive"
+              disabled={loading}
+              onClick={() => void confirmDelete()}
+            >
+              {loading ? "Deleting…" : "Delete"}
             </Button>
           </DialogFooter>
         </DialogContent>

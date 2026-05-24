@@ -14,7 +14,9 @@ export async function getProjectsForUser(): Promise<{
   if (!userId) return { myProjects: [], sharedProjects: [] }
 
   const user = await currentUser()
-  const userEmail = user?.emailAddresses[0]?.emailAddress
+  const userEmail =
+    user?.emailAddresses.find((email) => email.id === user?.primaryEmailAddressId)?.emailAddress ??
+    user?.emailAddresses[0]?.emailAddress
 
   const myProjects = await prisma.project.findMany({
     where: { ownerId: userId },

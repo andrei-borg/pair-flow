@@ -61,7 +61,7 @@ export function useProjectActions(): ProjectDialogsState {
   }
 
   async function confirmCreate() {
-    if (!nameInput.trim()) return
+    if (loading || !nameInput.trim()) return
     const id = roomIdPreview
     setLoading(true)
     try {
@@ -80,7 +80,7 @@ export function useProjectActions(): ProjectDialogsState {
   }
 
   async function confirmRename() {
-    if (!selectedProject || !nameInput.trim()) return
+    if (loading || !selectedProject || !nameInput.trim()) return
     setLoading(true)
     try {
       const res = await fetch(`/api/projects/${selectedProject.id}`, {
@@ -97,7 +97,7 @@ export function useProjectActions(): ProjectDialogsState {
   }
 
   async function confirmDelete() {
-    if (!selectedProject) return
+    if (loading || !selectedProject) return
     setLoading(true)
     try {
       const res = await fetch(`/api/projects/${selectedProject.id}`, {

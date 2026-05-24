@@ -106,7 +106,8 @@ export function useProjectActions(): ProjectDialogsState {
       if (!res.ok) return
       const deletedId = selectedProject.id
       close()
-      if (pathname?.includes(deletedId)) {
+      const deletedPath = `/editor/${deletedId}`
+      if (pathname === deletedPath || pathname?.startsWith(`${deletedPath}/`)) {
         router.push("/editor")
       } else {
         router.refresh()

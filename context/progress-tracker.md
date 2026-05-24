@@ -5,13 +5,20 @@ change.
 
 ## Current Phase
 
-- Feature 05 complete
+- Feature 06 complete
 
 ## Current Goal
 
 - Pick up the next feature spec from `context/feature-specs/`.
 
 ## Completed
+
+- Feature 06 — Project APIs:
+  - `app/api/projects/route.ts` — GET (list by ownerId, desc createdAt) + POST (create; defaults name to "Untitled Project").
+  - `app/api/projects/[projectId]/route.ts` — PATCH (rename, owner-only) + DELETE (owner-only, 204).
+  - Auth via `auth()` from `@clerk/nextjs/server`; 401 for unauthenticated, 403 for non-owner.
+  - Error handling: try/catch on Prisma calls (500) and request.json() (400).
+  - `npm run build` passes.
 
 - Feature 05 — Prisma Setup:
   - `prisma/models/project.prisma` — `Project` (ownerId, name, description?, status enum DRAFT/ARCHIVED, canvasJsonPath?, timestamps, indexes on ownerId and createdAt) and `ProjectCollaborator` (projectId cascade-delete, email, createdAt, unique on projectId+email, indexes on email and projectId+createdAt).

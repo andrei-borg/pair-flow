@@ -5,13 +5,21 @@ change.
 
 ## Current Phase
 
-- Feature 04 complete
+- Feature 05 complete
 
 ## Current Goal
 
 - Pick up the next feature spec from `context/feature-specs/`.
 
 ## Completed
+
+- Feature 05 — Prisma Setup:
+  - `prisma/models/project.prisma` — `Project` (ownerId, name, description?, status enum DRAFT/ARCHIVED, canvasJsonPath?, timestamps, indexes on ownerId and createdAt) and `ProjectCollaborator` (projectId cascade-delete, email, createdAt, unique on projectId+email, indexes on email and projectId+createdAt).
+  - `lib/prisma.ts` — cached singleton; branches on `DATABASE_URL`: `prisma+postgres://` uses `@prisma/adapter-ppg` (Prisma Postgres adapter), otherwise uses `@prisma/adapter-pg`; cached on `globalThis` in dev for hot-reload safety.
+  - Migration `20260524191415_init_project_models` applied to Prisma Postgres.
+  - Prisma Client (7.8.0) generated to `app/generated/prisma/`.
+  - `.env` populated with `DATABASE_URL` so `prisma.config.ts` dotenv load finds it.
+  - `npm run build` passes.
 
 - Feature 04 — Project Dialogs:
   - `hooks/use-project-dialogs.ts` — dialog/form/loading state hook; `DialogType`, `Project`, `ProjectDialogsState` types.

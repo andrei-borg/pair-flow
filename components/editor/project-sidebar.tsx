@@ -4,22 +4,9 @@ import { X, Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProjectDialogsContext } from "@/components/editor/project-dialogs-context";
-import type { Project } from "@/hooks/use-project-dialogs";
+import type { Project } from "@/hooks/use-project-actions";
 
-const MOCK_PROJECTS: Project[] = [
-  { id: "1", name: "Architecture Canvas", slug: "architecture-canvas", isOwned: true },
-  { id: "2", name: "API Design", slug: "api-design", isOwned: true },
-  { id: "3", name: "Shared Workspace", slug: "shared-workspace", isOwned: false },
-];
-
-const MY_PROJECTS = MOCK_PROJECTS.filter((p) => p.isOwned);
-const SHARED_PROJECTS = MOCK_PROJECTS.filter((p) => !p.isOwned);
-
-interface ProjectItemProps {
-  project: Project;
-}
-
-function OwnedProjectItem({ project }: ProjectItemProps) {
+function OwnedProjectItem({ project }: { project: Project }) {
   const { openRename, openDelete } = useProjectDialogsContext();
 
   return (
@@ -50,7 +37,7 @@ function OwnedProjectItem({ project }: ProjectItemProps) {
   );
 }
 
-function SharedProjectItem({ project }: ProjectItemProps) {
+function SharedProjectItem({ project }: { project: Project }) {
   return (
     <div className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-muted/50 transition-colors">
       <span className="flex-1 truncate text-sm text-foreground">
@@ -63,9 +50,16 @@ function SharedProjectItem({ project }: ProjectItemProps) {
 interface ProjectSidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  myProjects: Project[];
+  sharedProjects: Project[];
 }
 
-export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
+export function ProjectSidebar({
+  isOpen,
+  onClose,
+  myProjects,
+  sharedProjects,
+}: ProjectSidebarProps) {
   const { openCreate } = useProjectDialogsContext();
 
   return (
@@ -102,26 +96,26 @@ export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="my-projects" className="flex-1 mt-2 overflow-y-auto">
-              {MY_PROJECTS.length === 0 ? (
+              {myProjects.length === 0 ? (
                 <div className="flex items-center justify-center h-24 text-sm text-muted-foreground">
                   No projects yet
                 </div>
               ) : (
                 <div className="flex flex-col gap-0.5">
-                  {MY_PROJECTS.map((project) => (
+                  {myProjects.map((project) => (
                     <OwnedProjectItem key={project.id} project={project} />
                   ))}
                 </div>
               )}
             </TabsContent>
             <TabsContent value="shared" className="flex-1 mt-2 overflow-y-auto">
-              {SHARED_PROJECTS.length === 0 ? (
+              {sharedProjects.length === 0 ? (
                 <div className="flex items-center justify-center h-24 text-sm text-muted-foreground">
                   No shared projects
                 </div>
               ) : (
                 <div className="flex flex-col gap-0.5">
-                  {SHARED_PROJECTS.map((project) => (
+                  {sharedProjects.map((project) => (
                     <SharedProjectItem key={project.id} project={project} />
                   ))}
                 </div>

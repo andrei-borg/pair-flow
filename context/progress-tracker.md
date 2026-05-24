@@ -5,13 +5,31 @@ change.
 
 ## Current Phase
 
-- Feature 05 complete
+- Feature 07 complete
 
 ## Current Goal
 
 - Pick up the next feature spec from `context/feature-specs/`.
 
 ## Completed
+
+- Feature 07 — Wire Editor Home:
+  - `lib/projects.ts` — `getProjectsForUser()` fetches owned projects (by `ownerId`) and shared projects (by collaborator email via `currentUser()`).
+  - `hooks/use-project-actions.ts` — replaces `use-project-dialogs.ts`; manages dialog state + create/rename/delete mutations; create generates `slugify(name)-${randomSuffix()}` as the room/project ID; delete redirects to `/editor` if active project, else `router.refresh()`.
+  - `app/api/projects/route.ts` — POST now accepts optional `id` field so the generated room ID is stored as the project's database ID.
+  - `components/editor/editor-layout-client.tsx` — new client shell with sidebar toggle state; receives `myProjects`/`sharedProjects` as props from the server layout.
+  - `app/editor/layout.tsx` — converted to async server component; fetches projects via `getProjectsForUser()`; renders `EditorLayoutClient`.
+  - `app/editor/page.tsx` — converted to server component; interactive "New Project" button extracted to `NewProjectButton` client component.
+  - `components/editor/project-sidebar.tsx` — mock data removed; accepts real project lists as props.
+  - `components/editor/project-dialogs.tsx` — confirm buttons wired to `confirmCreate/confirmRename/confirmDelete`; create dialog shows `roomIdPreview`.
+  - `npm run build` passes.
+
+- Feature 06 — Project APIs:
+  - `app/api/projects/route.ts` — GET (list by ownerId, desc createdAt) + POST (create; defaults name to "Untitled Project").
+  - `app/api/projects/[projectId]/route.ts` — PATCH (rename, owner-only) + DELETE (owner-only, 204).
+  - Auth via `auth()` from `@clerk/nextjs/server`; 401 for unauthenticated, 403 for non-owner.
+  - Error handling: try/catch on Prisma calls (500) and request.json() (400).
+  - `npm run build` passes.
 
 - Feature 05 — Prisma Setup:
   - `prisma/models/project.prisma` — `Project` (ownerId, name, description?, status enum DRAFT/ARCHIVED, canvasJsonPath?, timestamps, indexes on ownerId and createdAt) and `ProjectCollaborator` (projectId cascade-delete, email, createdAt, unique on projectId+email, indexes on email and projectId+createdAt).

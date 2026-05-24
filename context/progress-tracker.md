@@ -5,13 +5,22 @@ change.
 
 ## Current Phase
 
-- Feature 03 complete
+- Feature 04 complete
 
 ## Current Goal
 
 - Pick up the next feature spec from `context/feature-specs/`.
 
 ## Completed
+
+- Feature 04 — Project Dialogs:
+  - `hooks/use-project-dialogs.ts` — dialog/form/loading state hook; `DialogType`, `Project`, `ProjectDialogsState` types.
+  - `components/editor/project-dialogs-context.tsx` — `ProjectDialogsProvider` + `useProjectDialogsContext`; renders `<ProjectDialogs />` at provider level so dialogs are always mounted.
+  - `components/editor/project-dialogs.tsx` — Create (name input + live slug preview), Rename (prefilled, auto-focus, Enter submits), Delete (destructive confirm, no input) dialogs; all controlled via context.
+  - `components/editor/project-sidebar.tsx` — mock project data (2 owned, 1 shared); owned items show hover rename/delete actions; shared items show no actions; mobile backdrop scrim (z-30, `sm:hidden`) closes sidebar on tap.
+  - `app/editor/layout.tsx` — wrapped with `ProjectDialogsProvider`.
+  - `app/editor/page.tsx` — editor home: centered heading, description, New Project button → Create dialog.
+  - `tsc --noEmit` and `eslint` pass.
 
 - Feature 03 — Auth (Clerk):
   - `@clerk/ui` installed; `dark` theme imported from `@clerk/ui/themes`.

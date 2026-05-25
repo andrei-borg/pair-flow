@@ -89,13 +89,14 @@ export function ShareDialog({
 
   async function handleRemove(email: string) {
     try {
-      await fetch(
+      const res = await fetch(
         `/api/projects/${projectId}/collaborators/${encodeURIComponent(email)}`,
         { method: "DELETE" },
       );
+      if (!res.ok) return; // Keep in list if delete failed
       setCollaborators((prev) => prev.filter((c) => c.email !== email));
     } catch {
-      // silent
+      // silent - keep collaborator in list on network error
     }
   }
 

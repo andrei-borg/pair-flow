@@ -20,7 +20,15 @@ export async function DELETE(
       where: { projectId_email: { projectId, email } },
     })
     return new Response(null, { status: 204 })
-  } catch {
-    return Response.json({ error: 'Not found' }, { status: 404 })
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      'code' in error &&
+      (error as { code: string }).code === 'P2025'
+    ) {
+      return Response.json({ error: 'Not found' }, { status: 404 })
+    }
+    console.error('Failed to delete collaborator:', error)
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

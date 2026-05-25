@@ -1,16 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { X, Plus, Pencil, Trash2 } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProjectDialogsContext } from "@/components/editor/project-dialogs-context";
 import type { Project } from "@/hooks/use-project-actions";
 
-function OwnedProjectItem({ project }: { project: Project }) {
+function OwnedProjectItem({ project, isActive }: { project: Project; isActive: boolean }) {
   const { openRename, openDelete } = useProjectDialogsContext();
 
   return (
-    <div className="group flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-muted/50 transition-colors">
+    <Link href={`/editor/${project.id}`} className={`group flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors ${isActive ? "bg-muted text-foreground" : "hover:bg-muted/50"}`}>
       <span className="flex-1 truncate text-sm text-foreground">
         {project.name}
       </span>
@@ -33,17 +35,17 @@ function OwnedProjectItem({ project }: { project: Project }) {
           <Trash2 className="h-3.5 w-3.5" />
         </Button>
       </div>
-    </div>
+    </Link>
   );
 }
 
-function SharedProjectItem({ project }: { project: Project }) {
+function SharedProjectItem({ project, isActive }: { project: Project; isActive: boolean }) {
   return (
-    <div className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-muted/50 transition-colors">
+    <Link href={`/editor/${project.id}`} className={`flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors ${isActive ? "bg-muted text-foreground" : "hover:bg-muted/50"}`}>
       <span className="flex-1 truncate text-sm text-foreground">
         {project.name}
       </span>
-    </div>
+    </Link>
   );
 }
 
@@ -61,6 +63,10 @@ export function ProjectSidebar({
   sharedProjects,
 }: ProjectSidebarProps) {
   const { openCreate } = useProjectDialogsContext();
+  const pathname = usePathname();
+  const activeProjectId = pathname.startsWith("/editor/")
+    ? pathname.split("/editor/")[1]?.split("/")[0] ?? null
+    : null;
 
   return (
     <>
@@ -103,7 +109,7 @@ export function ProjectSidebar({
               ) : (
                 <div className="flex flex-col gap-0.5">
                   {myProjects.map((project) => (
-                    <OwnedProjectItem key={project.id} project={project} />
+                    <OwnedProjectItem key={project.id} project={project} isActive={project.id === activeProjectId} />
                   ))}
                 </div>
               )}
@@ -116,7 +122,7 @@ export function ProjectSidebar({
               ) : (
                 <div className="flex flex-col gap-0.5">
                   {sharedProjects.map((project) => (
-                    <SharedProjectItem key={project.id} project={project} />
+                    <SharedProjectItem key={project.id} project={project} isActive={project.id === activeProjectId} />
                   ))}
                 </div>
               )}

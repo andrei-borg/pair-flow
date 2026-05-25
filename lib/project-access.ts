@@ -36,7 +36,7 @@ export async function getProjectIfAccessible(
 
   if (identity.email) {
     const collaborator = await prisma.projectCollaborator.findFirst({
-      where: { projectId, email: identity.email },
+      where: { projectId, email: identity.email.toLowerCase() },
     })
     if (collaborator) return { id: project.id, name: project.name, isOwner: false }
   }

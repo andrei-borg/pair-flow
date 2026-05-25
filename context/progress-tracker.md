@@ -5,13 +5,30 @@ change.
 
 ## Current Phase
 
-- Feature 07 complete
+- Feature 09 complete
 
 ## Current Goal
 
 - Pick up the next feature spec from `context/feature-specs/`.
 
 ## Completed
+
+- Feature 09 — Share Dialog:
+  - `lib/project-access.ts` — `getProjectIfAccessible()` now returns `isOwner: boolean`; owner returns `true`, collaborator returns `false`.
+  - `app/api/projects/[projectId]/collaborators/route.ts` — GET (list collaborators enriched via Clerk `getUserList`, accessible to owner and collaborators) + POST (invite by email, owner-only, upsert with `projectId_email` key).
+  - `app/api/projects/[projectId]/collaborators/[collaboratorEmail]/route.ts` — DELETE (remove collaborator, owner-only, 204).
+  - `components/ui/avatar.tsx` — shadcn Avatar component added.
+  - `components/editor/share-dialog.tsx` — client dialog; owner view: email invite input, collaborator list with remove buttons, copy-link with Copied! feedback; collaborator view: read-only list + copy-link; Clerk avatars and display names with email fallback.
+  - `components/editor/workspace-shell.tsx` — Share button enabled; opens `ShareDialog`; `WorkspaceShellProps.project` extended with `isOwner: boolean`.
+  - `npm run build` passes.
+
+- Feature 08 — Editor Workspace Shell:
+  - `lib/project-access.ts` — `getClerkIdentity()` returns `{ userId, email }` from Clerk; `getProjectIfAccessible()` checks owner or collaborator membership and returns project data or `null`.
+  - `components/editor/access-denied.tsx` — centered lock-icon component with short message and link back to `/editor`; shown for missing or unauthorized projects.
+  - `components/editor/project-sidebar.tsx` — updated `OwnedProjectItem` and `SharedProjectItem` to accept `isActive` prop; `ProjectSidebar` uses `usePathname()` to derive the active room ID and highlights the matching entry.
+  - `components/editor/workspace-shell.tsx` — client shell with AI sidebar toggle state; workspace sub-navbar shows project name, disabled Share button, and AI sidebar toggle; canvas placeholder fills remaining space; AI sidebar placeholder slides in on the right.
+  - `app/editor/[roomId]/page.tsx` — async server component; unauthenticated users are redirected to `/sign-in`; inaccessible/missing projects render `AccessDenied`; authorized users see `WorkspaceShell`.
+  - `npm run build` passes.
 
 - Feature 07 — Wire Editor Home:
   - `lib/projects.ts` — `getProjectsForUser()` fetches owned projects (by `ownerId`) and shared projects (by collaborator email via `currentUser()`).

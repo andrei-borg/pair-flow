@@ -5,13 +5,35 @@ change.
 
 ## Current Phase
 
-- Feature 09 complete
+- Feature 12 complete
 
 ## Current Goal
 
 - Pick up the next feature spec from `context/feature-specs/`.
 
 ## Completed
+
+- Feature 12 — Shape Panel:
+  - `types/canvas.ts` — added `NODE_SHAPES` const array, `NodeShape` union type, `NODE_COLORS` palette (8 color pairs), and `DEFAULT_NODE_COLOR` constant.
+  - `components/editor/canvas-node.tsx` — custom React Flow node renderer (`CanvasNodeRenderer`); renders a bordered rectangle with centered label; exposes `Handle` on all four sides.
+  - `components/editor/shape-panel.tsx` — floating pill toolbar with draggable icon buttons for all 6 shapes; encodes `ShapePayload` (shape, width, height) via `dataTransfer` using `application/x-canvas-shape` MIME type; sensible default sizes (rectangle wider than tall, circle square, diamond slightly larger).
+  - `components/editor/canvas-wrapper.tsx` — wrapped `Canvas` in `ReactFlowProvider` so `useReactFlow()` is available inside `Canvas`.
+  - `components/editor/canvas.tsx` — registered `canvasNode` node type; added `onDragOver`/`onDrop` handlers; drop reads payload, converts screen position to flow coordinates via `screenToFlowPosition`, and calls `reactFlow.addNodes()`; node ID uses shape + timestamp + counter; renders `<ShapePanel>` via React Flow `<Panel position="bottom-center">`.
+  - `npm run build` passes.
+
+- Feature 11 — Base Canvas:
+  - `types/canvas.ts` — `NodeData` interface (`label`, `color?`, `shape?`); `CanvasNode` and `CanvasEdge` type aliases for React Flow's generic `Node`/`Edge` with `'canvasNode'`/`'canvasEdge'` type strings.
+  - `components/editor/canvas-wrapper.tsx` — client component wrapping `LiveblocksProvider` (authEndpoint `/api/liveblocks-auth`) + `RoomProvider` (roomId, initialPresence `{ cursor: null, isThinking: false }`) + inline `CanvasErrorBoundary` class + `ClientSideSuspense` with loading fallback.
+  - `components/editor/canvas.tsx` — client component using `useLiveblocksFlow({ suspense: true, nodes: { initial: [] }, edges: { initial: [] } })`; renders `<ReactFlow>` with `ConnectionMode.Loose`, `fitView`, `<MiniMap />`, `<Background variant="dots" />`; imports React Flow and Liveblocks CSS.
+  - `components/editor/workspace-shell.tsx` — canvas placeholder replaced with `<CanvasWrapper roomId={project.id} />`.
+  - `npm run build` passes.
+
+- Feature 10 — Liveblocks Setup:
+  - `@liveblocks/node` installed.
+  - `liveblocks.config.ts` — `Presence` typed with `cursor: { x, y } | null` and `isThinking: boolean`; `UserMeta` typed with `id` and `info: { name, avatar, color }`.
+  - `lib/liveblocks.ts` — lazy-cached `Liveblocks` node client (`getLiveblocks()`); `cursorColorForUser()` deterministically maps a user ID to one of 10 fixed hex colors via a simple hash.
+  - `app/api/liveblocks-auth/route.ts` — `POST /api/liveblocks-auth`; requires Clerk auth (401); verifies project access via `getProjectIfAccessible` (403 on failure); calls `getOrCreateRoom` to ensure room exists; returns access-token session with `name`, `avatar`, and generated `color` attached as `userInfo`.
+  - `npm run build` passes.
 
 - Feature 09 — Share Dialog:
   - `lib/project-access.ts` — `getProjectIfAccessible()` now returns `isOwner: boolean`; owner returns `true`, collaborator returns `false`.

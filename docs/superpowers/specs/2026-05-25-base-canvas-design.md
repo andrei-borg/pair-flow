@@ -93,7 +93,7 @@ With:
 <CanvasWrapper roomId={project.id} />
 ```
 
-The wrapper fills the available space via `flex-1` on its parent container.
+`CanvasWrapper` must carry `className="flex-1 min-h-0"` so it fills the flex row left behind by the removed placeholder div.
 
 ## Scope Limits
 
